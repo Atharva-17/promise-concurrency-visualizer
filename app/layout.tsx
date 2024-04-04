@@ -9,7 +9,7 @@ import clsx from "clsx";
 
 export const metadata: Metadata = {
 	title: {
-		default: siteConfig.name,
+		default: "Promise Concurrency Visualizer",
 		template: `%s - ${siteConfig.name}`,
 	},
 	description: siteConfig.description,
@@ -40,21 +40,11 @@ export default function RootLayout({
 			>
 				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
 					<div className="relative flex flex-col h-screen">
-						<Navbar />
+						{/* <Navbar /> */}
 						<main className="container mx-auto max-w-7xl px-6 flex-grow">
 							{children}
 						</main>
-						<footer className="w-full flex items-center justify-center py-3">
-							<Link
-								isExternal
-								className="flex items-center gap-1 text-current"
-								href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-								title="nextui.org homepage"
-							>
-								<span className="text-default-600">Developed by</span>
-								<p className="text-primary">Atharva Pandhare</p>
-							</Link>
-						</footer>
+						
 					</div>
 				</Providers>
 			</body>

@@ -13,6 +13,8 @@ import React from "react";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Radio, RadioGroup } from "@nextui-org/radio";
 import { Spinner } from "@nextui-org/spinner";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { OctagonX, RotateCcw, Sparkles } from "lucide-react";
 
 export default function Home() {
   const [loader, setLoader] = React.useState<boolean>(false);
@@ -102,7 +104,48 @@ export default function Home() {
     if (resultProgressBar) {
       resultProgressBar.innerHTML = "";
     }
+    setPromiseVerdict("");
+    setResult("");
+  };
 
+  const clearFn = () => {
+    const progressBar1 = document.getElementById("bar1");
+    const progressBar2 = document.getElementById("bar2");
+    const progressBar3 = document.getElementById("bar3");
+    const timer1 = document.getElementById("timer1");
+    const timer2 = document.getElementById("timer2");
+    const timer3 = document.getElementById("timer3");
+    const resultTimer = document.getElementById("resultTimer");
+    const resultProgressBar = document.getElementById("resultProgressBar");
+
+    if (progressBar1) {
+      progressBar1.innerHTML = "";
+    }
+    if (progressBar2) {
+      progressBar2.innerHTML = "";
+    }
+    if (progressBar3) {
+      progressBar3.innerHTML = "";
+    }
+    if (timer1) {
+      timer1.innerHTML = "";
+    }
+    if (timer2) {
+      timer2.innerHTML = "";
+    }
+    if (timer3) {
+      timer3.innerHTML = "";
+    }
+
+    if (resultTimer) {
+      resultTimer.innerHTML = "";
+    }
+
+    if (resultProgressBar) {
+      resultProgressBar.innerHTML = "";
+    }
+
+    setLoader(false);
     setPromiseVerdict("");
     setResult("");
   };
@@ -220,138 +263,170 @@ export default function Home() {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-lg text-center justify-center">
-        <h1 className={title()}>Promise Concurrency Visualizer</h1>
-        <h2 className={subtitle({ class: "mt-4" })}>
-          See the Flow, Optimize the Load
-        </h2>
-      </div>
-      <Select
-        items={promises}
-        label="Select Promise concurrency type"
-        className="max-w-md"
-        onChange={handleSelectionChange}
-        selectedKeys={[value]}
-      >
-        {promises.map((item) => (
-          <SelectItem key={item.value} value={item.value}>
-            {item.label}
-          </SelectItem>
-        ))}
-      </Select>
+    <section className="py-8">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
+        <div className="space-y-4">
+          <div className="inline-block text-center justify-center">
+            <h1 className={title()}>Promise Concurrency Visualizer</h1>
+            <h2 className={subtitle({ class: "mt-4" })}>
+              See the Flow, Optimize the Load
+            </h2>
+            <ThemeSwitch />
+          </div>
+          <Select
+            items={promises}
+            label="Select Promise concurrency type"
+            className=""
+            onChange={handleSelectionChange}
+            selectedKeys={[value]}
+            color="primary"
+          >
+            {promises.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </Select>
 
-      <div className="">
-        {promises.map((item) => (
-          <>
-            <div className="text-default-500 text-small">
-              {item.value === value && (
-                <>
-                  <Code>
-                    <p className="font-bold">{item.value}</p>
-                    <br />
-                    {item.desc}
-                  </Code>
-                </>
+          <div className="">
+            {promises.map((item) => (
+              <>
+                <div className="text-default-500 text-small">
+                  {item.value === value && (
+                    <>
+                      <div className="bg-default-100 p-3 rounded-md">
+                        <p className="font-bold">{item.value}</p>
+                        <br />
+                        {item.desc}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </>
+            ))}
+          </div>
+
+          <div className="w-full">
+            <ButtonGroup fullWidth>
+              <Button
+                onClick={clearFn}
+                variant="bordered"
+                className="font-medium"
+                color="danger"
+                endContent={<OctagonX size={16} />}
+              >
+                Clear
+              </Button>
+              <Button
+                onClick={reset}
+                variant="bordered"
+                className="font-medium"
+                color="warning"
+                endContent={<RotateCcw size={16} />}
+              >
+                Reset
+              </Button>
+              <Button
+                onClick={start}
+                className="font-medium"
+                color="primary"
+                endContent={<Sparkles size={16} />}
+              >
+                Start
+              </Button>
+            </ButtonGroup>
+          </div>
+          <div className="bg-default-100 border border-success-500 p-4 rounded-lg ">
+            <p className="text-xl font-medium">Result</p>
+
+            <div className="flex gap-2 mt-4">
+              <p className="font-semibold">Status:</p>
+              {loader && promiseVerdict === "" ? (
+                <Spinner size="sm" color="current" />
+              ) : (
+                <div
+                  className={`${
+                    promiseVerdict === "<resolved>"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  } font-bold`}
+                >
+                  {promiseVerdict}
+                </div>
               )}
             </div>
-          </>
-        ))}
-      </div>
 
-      <div className="w-full max-w-md">
-        <ButtonGroup fullWidth>
-          <Button
-            onClick={clear}
-            variant="bordered"
-            className="font-medium"
-            color="danger"
-          >
-            Clear
-          </Button>
-          <Button
-            onClick={reset}
-            variant="bordered"
-            className="font-medium"
-            color="warning"
-          >
-            Reset
-          </Button>
-          <Button onClick={start} className="font-medium" color="primary">
-            Start
-          </Button>
-        </ButtonGroup>
-      </div>
-
-      <div className="max-w-lg w-full space-y-4">
-        {promisesArr.map((item, index) => (
-          <div key={index} className="bg-default-100 p-4 rounded-lg ">
-            <p className="text-lg font-medium">{item.name}</p>
-            <div className="flex gap-3 mt-3">
-              <Select
-                variant="bordered"
-                items={numArr}
-                label="Select Delay Time"
-                className="max-w-md"
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                  item.setDelayTime(e.target.value);
-                }}
-                selectedKeys={[item.delayTime]}
-              >
-                {numArr.map((item) => (
-                  <SelectItem key={item.value} value={item.value}>
-                    {item.label}
-                  </SelectItem>
-                ))}
-              </Select>
-              <RadioGroup
-                orientation="horizontal"
-                value={item.status}
-                onValueChange={item.setStatus}
-              >
-                <Radio value="resolve">Resolve</Radio>
-                <Radio value="reject">Reject</Radio>
-              </RadioGroup>
-            </div>
             <div className="mt-3">
-              <div id={item.progressBar} className="flex gap-1"></div>
-              <div id={item.timerElement} className="mt-1 font-medium"></div>
+              <p className="font-semibold">Final Result:</p>
+              {loader && result === "" ? (
+                <Spinner size="sm" color="current" />
+              ) : (
+                <div className="w-full bg-default-200 px-1 rounded-md">
+                  {result}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-3">
+              <div id="resultProgressBar" className="mt-4 flex gap-1"></div>
+              <div id="resultTimer" className="mt-1 font-medium"></div>
             </div>
           </div>
-        ))}
+        </div>
 
-        <div className="bg-default-100 border border-success-500 p-4 rounded-lg ">
-          <p className="text-lg font-medium">Result</p>
-
-          <div className="flex gap-2 mt-4">
-            <p className="text-base">Status:</p>
-            {loader && promiseVerdict === "" ? (
-              <Spinner size="sm" color="current" />
-            ) : (
-              <div
-                className={`${
-                  promiseVerdict === "<resolved>"
-                    ? "text-green-600"
-                    : "text-red-600"
-                } font-bold`}
-              >
-                {promiseVerdict}
+        <div className="">
+          <div className="w-full space-y-4">
+            {promisesArr.map((item, index) => (
+              <div key={index} className="bg-default-100 p-4 rounded-lg">
+                <p className="text-lg font-medium">{item.name}</p>
+                <div className="flex justify-around items-center gap-2 mt-3">
+                  <Select
+                    variant="bordered"
+                    items={numArr}
+                    label="Select Delay Time"
+                    className="max-w-md"
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                      item.setDelayTime(e.target.value);
+                    }}
+                    selectedKeys={[item.delayTime]}
+                  >
+                    {numArr.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  <div>
+                    <RadioGroup
+                      value={item.status}
+                      onValueChange={item.setStatus}
+                    >
+                      <Radio value="resolve">Resolve</Radio>
+                      <Radio value="reject">Reject</Radio>
+                    </RadioGroup>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <div id={item.progressBar} className="flex gap-1"></div>
+                  <div
+                    id={item.timerElement}
+                    className="mt-1 font-medium"
+                  ></div>
+                </div>
               </div>
-            )}
-          </div>
+            ))}
 
-          <div className="mt-3">
-            <p className="">Final Result:</p>
-            {loader && result === "" ? (
-              <Spinner size="sm" color="current" />
-            ) : (
-              <Code className="">{result}</Code>
-            )}
-          </div>
-
-          <div className="mt-3">
-            <div id="resultProgressBar" className="mt-4 flex gap-1"></div>
-            <div id="resultTimer" className="mt-1 font-medium"></div>
+            <footer className="w-full flex items-center justify-center py-3">
+              <Link
+                isExternal
+                className="flex items-center gap-1 text-current"
+                href="https://atharva-pandhare.netlify.app/"
+                title="atharva pandhare"
+              >
+                <span className="text-default-600">Developed by</span>
+                <p className="text-primary">Atharva Pandhare</p>
+              </Link>
+            </footer>
           </div>
         </div>
       </div>
