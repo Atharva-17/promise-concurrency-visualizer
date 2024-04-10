@@ -1,12 +1,7 @@
 "use client";
 
 import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
-import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
 import { Select, SelectItem } from "@nextui-org/select";
 import { numArr, promises } from "@/config/constants";
 import React from "react";
@@ -213,7 +208,7 @@ export default function Home() {
       "Promise Third",
       "bar3",
       "timer3",
-      "text-orange-500"
+      "text-yellow-500"
     );
 
     let resultTime = 0;
@@ -291,7 +286,7 @@ export default function Home() {
           <div className="">
             {promises.map((item) => (
               <>
-                <div className="text-default-500 text-small">
+                <div key={item.value} className="text-default-500 text-small">
                   {item.value === value && (
                     <>
                       <div className="bg-default-100 p-3 rounded-md">
